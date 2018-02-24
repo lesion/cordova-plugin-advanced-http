@@ -107,6 +107,9 @@ var publicInterface = {
     disableRedirect: function (disable, success, failure) {
         return exec(success, failure, 'CordovaHttpPlugin', 'disableRedirect', [disable]);
     },
+    setProxy: function (host, port, success, failure) {
+        return exec(success, failure, 'CordovaHttpPlugin', 'setProxy', [host, port]);
+    },
     validateDomainName: function (validate, success, failure) {
         failure(messages.DEPRECATED_VDN);
     },

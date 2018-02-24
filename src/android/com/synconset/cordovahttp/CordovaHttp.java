@@ -43,6 +43,8 @@ abstract class CordovaHttp {
     private static AtomicBoolean acceptAllCerts = new AtomicBoolean(false);
     private static AtomicBoolean validateDomainName = new AtomicBoolean(true);
     private static AtomicBoolean disableRedirect = new AtomicBoolean(false);
+    private static String proxyHost;
+    private static int proxyPort;
 
     private String urlString;
     private Object params;
@@ -85,6 +87,11 @@ abstract class CordovaHttp {
 
     public static void validateDomainName(boolean accept) {
         validateDomainName.set(accept);
+    }
+
+    public static void setProxy(String host, int port) {
+        proxyHost = host;
+        proxyPort = port;
     }
 
     public static void disableRedirect(boolean disable) {
@@ -149,7 +156,12 @@ abstract class CordovaHttp {
         return request;
     }
 
-    protected void setupDataSerializer(HttpRequest request) throws JSONException, Exception {
+    protected HttpRequest setupProxy(HttpRequest request) {
+        request.useProxy(proxyHost, proxyPort);
+        return request;
+    }
+
+    protected HttpRequest setupDataSerializer(HttpRequest request) throws JSONException, Exception {
       if ("json".equals(this.getSerializerName())) {
           request.contentType(request.CONTENT_TYPE_JSON, request.CHARSET_UTF8);
       } else if ("utf8".equals(this.getSerializerName())) {
@@ -226,6 +238,7 @@ abstract class CordovaHttp {
     }
 
     protected void prepareRequest(HttpRequest request) throws HttpRequestException, JSONException {
+      this.setupProxy(request);
       this.setupRedirect(request);
       this.setupSecurity(request);
       request.readTimeout(this.getRequestTimeout());
