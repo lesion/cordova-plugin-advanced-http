@@ -161,7 +161,7 @@ abstract class CordovaHttp {
         return request;
     }
 
-    protected HttpRequest setupDataSerializer(HttpRequest request) throws JSONException, Exception {
+    protected void setupDataSerializer(HttpRequest request) throws JSONException, Exception {
       if ("json".equals(this.getSerializerName())) {
           request.contentType(request.CONTENT_TYPE_JSON, request.CHARSET_UTF8);
       } else if ("utf8".equals(this.getSerializerName())) {
